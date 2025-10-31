@@ -14,7 +14,7 @@ def get(path, params):
             "Accept": "application/json"
         })
 
-artist = get(f"/artist/{ENDINO}", params = { "inc": "release-rels+recording-rels" }).json()
+artist = get(f"/artist/{ENDINO}", params = { "inc": "release-group-rels+release-rels+recording-rels" }).json()
 
 release_groups_by_id = {}
 relation_types_by_release_group_id = {}
@@ -40,6 +40,14 @@ for relation in artist["relations"]:
 
         release_group = release["release-group"]
         release_group_id = release_group["id"]
+        release_groups_by_id[release_group_id] = release_group
+
+        relation_types = release_relation_types_by_release_group_id.get(release_group_id, set())
+        relation_types.add(relation["type"])
+        release_relation_types_by_release_group_id[release_group_id] = relation_types
+    elif target_type == "release_group":
+        release_group_id = relation["release_group"]["id"]
+        release_group = get(f"/release-group/{release_group_id}", { "inc": "artists" }).json()
         release_groups_by_id[release_group_id] = release_group
 
         relation_types = release_relation_types_by_release_group_id.get(release_group_id, set())
