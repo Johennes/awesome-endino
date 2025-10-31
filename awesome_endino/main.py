@@ -55,8 +55,8 @@ for relation in artist["relations"]:
         release_relation_types_by_release_group_id[release_group_id] = relation_types
 
 print()
-print("| Year | Artist | Release | Credit |")
-print("| ---- | ------ | ------- | ------ |")
+print("| # | Year | Artist | Release | Credit |")
+print("| - | ---- | ------ | ------- | ------ |")
 
 release_groups = sorted(release_groups_by_id.values(), key = lambda rg: rg["first-release-date"])
 
@@ -85,6 +85,7 @@ def format_relation_types(relation_types_by_release_group_dict, relation_types_d
             fragments.append(f"{type} ({count} {tracks})")
     return ", ".join(fragments)
 
+n = 1
 for release_group in release_groups:
     id = release_group["id"]
     artists = format_artists(release_group)
@@ -96,4 +97,5 @@ for release_group in release_groups:
 
     url = f"https://musicbrainz.org/release-group/{id}"
 
-    print(f"| {date} | {artists} | [{title}]({url}) | {relation_types} |")
+    print(f"| {n} | {date} | {artists} | [{title}]({url}) | {relation_types} |")
+    n += 1
